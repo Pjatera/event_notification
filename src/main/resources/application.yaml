@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: event-management
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: false
+  datasource:
+    url: jdbc:postgresql://localhost:5436/postgresNotification
+    username: postgres
+    password: mysecretpassword
+    driver-class-name: org.postgresql.Driver
+  sql:
+    init:
+      mode: always
+      continue-on-error: false
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:demo_data.sql
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer:  org.springframework.kafka.support.serializer.JsonDeserializer
+      group-id: event-notification
+      session-timeout-ms: 15000
+      heartbeat-interval-ms: 3000
+      max-poll-interval-ms: 300000
+      properties:
+        spring.json.trusted.packages: "ru.javacourse.eventnotoficationcore.kafka"
+
+
+springdoc:
+  swagger-ui:
+    url: /openapi.yaml
+server:
+  port: 8082
+  servlet:
+    context-path: /
+
+security:
+  jwt:
+    secret: 0JzQsNC80LAg0LzRi9C70LAg0YDQsNC80YMs0LAg0JrQsNGA0Lsg0YMg0JrQu9Cw0YDRiyDRg9C60YDQsNC7INC60L7RgNCw0LvRiw==
+    access: 3600000
+
+notification:
+  delete:
+    cron: 0 */1 * * * *

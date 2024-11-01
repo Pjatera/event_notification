@@ -17,22 +17,18 @@ import java.util.List;
         uses = FieldMapper.class, imports = {LocalDateTime.class})
 public interface NotificationMapper {
 
-    NotificationEntity fromEntityToDomain(EventChangeNotification notification);
 
     EventChangeNotification fromDomainToEntity(NotificationEntity notificationEntity);
 
     EventChangeNotificationDto fromDomainToDto(EventChangeNotification notification);
-
-    EventChangeNotification fromDtoToDomain(EventChangeNotificationDto notificationDto);
 
     List<EventChangeNotificationDto> fromDomainListToDtoList(List<EventChangeNotification> notifications);
 
     List<EventChangeNotification> fromEntityListToDomainList(List<NotificationEntity> notificationEntities);
 
 
-
     @Mapping(target = "isRead", constant = "false")
     @Mapping(target = "createNotificationDate", expression = "java(LocalDateTime.now())")
-    @Mapping(target = "id",expression ="java(null)")
+    @Mapping(target = "id", expression = "java(null)")
     NotificationEntity fromKafkaMessageToNotificationEntity(EventChangeKafkaMessage kafkaMessage);
 }

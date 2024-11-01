@@ -29,7 +29,7 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final UserNotificationRepositoryCustom userNotificationRepositoryCustom;
     private final UserNotificationRepository userNotificationRepository;
-    private final Period TIME_PERIOD_FOR_DELETION = Period.ofDays(7);
+    private final Period timePeriodForDeletion = Period.ofDays(7);
 
     @Transactional
     public List<EventChangeNotification> getAllUnreadNotificationsByUser() {
@@ -46,15 +46,14 @@ public class NotificationService {
     public void markNotificationsAsRead(Long... notificationIds) {
         var currentUserId = authenticationService.getCurrentUserAuthenticated().id();
         var allUserNotificationWithId = userNotificationRepository.findAllUserNotificationWithId(currentUserId, notificationIds);
-        allUserNotificationWithId.forEach(notification -> {
-            notification.getNotification().setIsRead(true);
-        });
+        allUserNotificationWithId.forEach(notification -> notification.getNotification().setIsRead(true));
     }
 
     @Transactional
     public void reportAnEvent(EventChangeKafkaMessage event) throws KafkaDataFormatException {
         var eventChangeNotification = notificationMapper.fromKafkaMessageToNotificationEntity(event);
         if (eventChangeNotification == null || eventChangeNotification.getEventId() == null || eventChangeNotification.getOwnerId() == null) {
+            log.error("Bad kafka message,eventId and ownerId not be null");
             throw new KafkaDataFormatException("Bad kafka message,eventId and ownerId not be null");
         }
         var listUsers = event.usersId();
@@ -76,7 +75,7 @@ public class NotificationService {
 
     @Transactional
     public void performTaskDeleteNotification() {
-        var dateTime = LocalDateTime.now().minus(TIME_PERIOD_FOR_DELETION);
+        var dateTime = LocalDateTime.now().minus(timePeriodForDeletion);
 
         var allUsersNotificationBefore = userNotificationRepository.findAllUsersNotificationBefore(dateTime);
         var longs = allUsersNotificationBefore.stream()

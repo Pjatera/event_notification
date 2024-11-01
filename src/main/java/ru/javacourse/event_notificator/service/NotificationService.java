@@ -82,7 +82,10 @@ public class NotificationService {
         var longs = allUsersNotificationBefore.stream()
                 .map(UserNotificationEntity::getId)
                 .toList();
-        userNotificationRepository.deleteAllById(longs);
+        if (!longs.isEmpty()) {
+            userNotificationRepository.deleteAllById(longs);
+        }
         log.info("deleting {} notifications", longs.size());
+
     }
 }

@@ -6,10 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.javacourse.event_notificator.db.entity.field.FieldChangeDateTimeEntity;
-import ru.javacourse.event_notificator.db.entity.field.FieldChangeDecimalEntity;
-import ru.javacourse.event_notificator.db.entity.field.FieldChangeIntegerEntity;
-import ru.javacourse.event_notificator.db.entity.field.FieldChangeStringEntity;
+import ru.javacourse.event_notificator.db.entity.field.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -46,7 +43,7 @@ public class NotificationEntity {
     private FieldChangeIntegerEntity duration;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "locationid_id")
-    private FieldChangeIntegerEntity locationId;
+    private FieldChangeLongEntity locationId;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "status")
     private FieldChangeStringEntity status;

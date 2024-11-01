@@ -12,7 +12,7 @@ public record EventChangeNotificationDto(
         FieldChange<LocalDateTime> date,
         FieldChange<BigDecimal> cost,
         FieldChange<Integer> duration,
-        FieldChange<Integer> locationId,
+        FieldChange<Long> locationId,
         FieldChange<String> status,
         LocalDateTime createNotificationDate
 ) {

@@ -71,7 +71,7 @@ public class NotificationService {
         notificationRepository.save(eventChangeNotification);
         notificationRepository.flush();
         userNotificationRepositoryCustom.bulkInsertUserNotifications(notificationEntities);
-        //  userNotificationRepositoryCustom.batchInsert(notificationEntities,100);
+        //userNotificationRepositoryCustom.batchInsert(notificationEntities,100);
     }
 
     @Transactional

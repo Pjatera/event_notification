@@ -42,9 +42,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         if (StringUtils.isNoneEmpty(login) && SecurityContextHolder.getContext().getAuthentication() == null) {
             if (jwtService.isValidToken(bearerToken)) {
                 var userId = jwtService.extractUserId(bearerToken);
-                UserDetails userDetails = new UserInfo(userId,jwtService.getAuthorities(bearerToken));
+                var userDetails = new UserInfo(userId,jwtService.getAuthorities(bearerToken));
                 var context = SecurityContextHolder.createEmptyContext();
-                var token = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                var token = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities());
                 token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 context.setAuthentication(token);
                 SecurityContextHolder.setContext(context);

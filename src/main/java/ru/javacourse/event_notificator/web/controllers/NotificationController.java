@@ -26,7 +26,6 @@ public class NotificationController {
 
 
     @GetMapping("/notifications")
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<List<EventChangeNotificationDto>> getNotifications() {
         log.info("Request has been received to receive all notifications with status UNREAD");
         List<EventChangeNotification> notifications = notificationService.getAllUnreadNotificationsByUser();
@@ -35,7 +34,6 @@ public class NotificationController {
     }
 
     @PostMapping("/notifications")
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     public ResponseEntity<Void> createNotification(@RequestBody ListNotificationId notificationIs) {
         log.info("Received a request to mark notifications as read");
         var notificationIds = notificationIs.notificationIds().toArray(Long[]::new);

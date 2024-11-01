@@ -25,7 +25,6 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
     private final AuthenticationCustomEntryPoint authenticationCustomEntryPoint;
     private final AccessCustomDeniedHandler accessCustomDeniedHandler;
@@ -51,8 +50,8 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers("/css/**", "/js/**", "/img/**", "/lib/**", "/favicon.ico", "/swagger-ui/**", "/v2/api-docs", "/v3/api-docs", "/configuration/ui", "/swagger-resources/**", "/configuration/security", "/swagger-ui.html", "/webjars/**", "/v3/api-docs/swagger-config", "/openapi.yaml").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/notifications").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.POST, "/notifications").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/notifications").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+                        .requestMatchers(HttpMethod.POST, "/notifications").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .anonymous(Customizer.withDefaults())

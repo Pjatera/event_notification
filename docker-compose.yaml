@@ -22,5 +22,23 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    networks:
+     - app-network
+  event-notification:
+    image: dockerfile-test-event-notification:0.0.1
+    container_name: event-notification
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://notificationDb:5432/postgresNotification
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: mysecretpassword
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: 9092:9092
+    networks:
+      - app-network
+
 volumes:
   postgres_data:
+networks:
+  app-network:
+    driver: bridge

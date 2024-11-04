@@ -1,6 +1,6 @@
 spring:
   application:
-    name: event-management
+    name: event-notification
   jpa:
     open-in-view: false
     hibernate:
@@ -10,7 +10,7 @@ spring:
       hibernate:
         format_sql: false
   datasource:
-    url: jdbc:postgresql://localhost:5436/postgresNotification
+    url: jdbc:postgresql://notificationDb:5432/postgresNotification
     username: postgres
     password: mysecretpassword
     driver-class-name: org.postgresql.Driver
@@ -21,16 +21,15 @@ spring:
       schema-locations: classpath:schema.sql
       data-locations: classpath:demo_data.sql
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka:9092
     consumer:
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer:  org.springframework.kafka.support.serializer.JsonDeserializer
       group-id: event-notification
       session-timeout-ms: 15000
       heartbeat-interval-ms: 3000
       max-poll-interval-ms: 300000
+      auto-offset-reset: earliest
       properties:
-        spring.json.trusted.packages: "ru.javacourse.eventnotoficationcore.kafka"
+        spring.json.trusted.packages: "*"
 
 
 springdoc:

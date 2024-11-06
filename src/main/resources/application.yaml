@@ -10,7 +10,7 @@ spring:
       hibernate:
         format_sql: false
   datasource:
-    url: jdbc:postgresql://notificationDb:5432/postgresNotification
+    url: jdbc:postgresql://host.docker.internal:5436/postgresNotification
     username: postgres
     password: mysecretpassword
     driver-class-name: org.postgresql.Driver
@@ -21,12 +21,12 @@ spring:
       schema-locations: classpath:schema.sql
       data-locations: classpath:demo_data.sql
   kafka:
-    bootstrap-servers: kafka:9092
+    bootstrap-servers: host.docker.internal:9092
     consumer:
       group-id: event-notification
       session-timeout-ms: 15000
       heartbeat-interval-ms: 3000
-      max-poll-interval-ms: 300000
+      max-poll-interval-ms: 30000
       auto-offset-reset: earliest
       properties:
         spring.json.trusted.packages: "*"

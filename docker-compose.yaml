@@ -1,44 +1,54 @@
 version: '3.8'
 services:
-  postgres:
-    image: postgres:16.4
-    restart: "no"
+  kafka-1:
+    image: bitnami/kafka:latest
     ports:
-      - "5436:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresqlNotification/data
+      - "9094:9094"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: mysecretpassword
-      POSTGRES_DB: postgresNotification
-    healthcheck:
-      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
-      interval: 10s
-      timeout: 5s
-      start_period: 10s
-      retries: 5
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    networks:
-     - app-network
-  event-notification:
-    image: dockerfile-test-event-notification:0.0.1
-    container_name: event-notification
-    ports:
-      - "8082:8082"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://notificationDb:5432/postgresNotification
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: mysecretpassword
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: 9092:9092
-    networks:
-      - app-network
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_KRAFT_CLUSTER_ID=41bcfd0dc6c44b3ea5f2aeb797fd124d
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka-1:9091,2@kafka-2:9091,3@kafka-3:9091
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9090,CONTROLLER://:9091,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS= PLAINTEXT://:kafka-1:9090,EXTERNAL://${HOSTNAME:-localhost}:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
 
-volumes:
-  postgres_data:
+  kafka-2:
+    image: bitnami/kafka:latest
+    ports:
+      - "9096:9096"
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_CFG_NODE_ID=2
+      - KAFKA_KRAFT_CLUSTER_ID=41bcfd0dc6c44b3ea5f2aeb797fd124d
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka-1:9091,2@kafka-2:9091,3@kafka-3:9091
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9090,CONTROLLER://:9091,EXTERNAL://:9096
+      - KAFKA_CFG_ADVERTISED_LISTENERS= PLAINTEXT://:kafka-1:9090,EXTERNAL://${HOSTNAME:-localhost}:9096
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+
+  kafka-3:
+    image: bitnami/kafka:latest
+    ports:
+      - "9098:9098"
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_CFG_NODE_ID=3
+      - KAFKA_KRAFT_CLUSTER_ID=41bcfd0dc6c44b3ea5f2aeb797fd124d
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka-1:9091,2@kafka-2:9091,3@kafka-3:9091
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9090,CONTROLLER://:9091,EXTERNAL://:9098
+      - KAFKA_CFG_ADVERTISED_LISTENERS= PLAINTEXT://:kafka-1:9090,EXTERNAL://${HOSTNAME:-localhost}:9098
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+
+
 networks:
   app-network:
     driver: bridge

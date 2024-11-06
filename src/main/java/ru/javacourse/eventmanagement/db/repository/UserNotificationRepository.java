@@ -7,7 +7,7 @@ import ru.javacourse.eventmanagement.db.entity.notification.UserNotificationEnti
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface UserNotificationRepository extends JpaRepository<UserNotificationEntity, Long> {
+public interface UserNotificationRepository extends JpaRepository<UserNotificationEntity, Long>,UserNotificationRepositoryCustom {
     @Query("""
             select  u from UserNotificationEntity u
             join fetch u.notification n

@@ -28,7 +28,6 @@ public class NotificationService {
     private final NotificationMapper notificationMapper;
     private final AuthenticationService authenticationService;
     private final NotificationRepository notificationRepository;
-    private final UserNotificationRepositoryCustom userNotificationRepositoryCustom;
     private final UserNotificationRepository userNotificationRepository;
     private final Period timePeriodForDeletion = Period.ofDays(7);
 
@@ -70,7 +69,7 @@ public class NotificationService {
 
         notificationRepository.save(eventChangeNotification);
         notificationRepository.flush();
-        userNotificationRepositoryCustom.bulkInsertUserNotifications(notificationEntities);
+        userNotificationRepository.bulkInsertUserNotifications(notificationEntities);
         //userNotificationRepositoryCustom.batchInsert(notificationEntities,100);
     }
 

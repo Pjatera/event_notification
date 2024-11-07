@@ -2,6 +2,9 @@ package ru.javacourse.eventmanagement.db.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javacourse.eventmanagement.db.entity.notification.UserNotificationEntity;
@@ -9,6 +12,7 @@ import ru.javacourse.eventmanagement.db.entity.notification.UserNotificationEnti
 import java.util.List;
 
 @Repository
+
 public class UserNotificationRepositoryCustomImpl implements UserNotificationRepositoryCustom {
 
     @PersistenceContext
